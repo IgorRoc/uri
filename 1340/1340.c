@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int* busca(int*, int, int);
-int maiorNo(int*, int);
-void apagar(int*, int, int);
-void realocaRec(int*, int, int);
+int* busca(int**, int, int);
+int maiorNo(int**, int);
+int** iniciaMatriz(int, int);
+void apagar(int**, int, int);
+void realocaRec(int**, int, int);
 
 int main(){
     int iteracoes;
@@ -13,29 +14,31 @@ int main(){
 
 
     while(iteracoes != 0){
-        int* operacoes = (int *)malloc( 2 * iteracoes * sizeof(int));
+        int** operacoes = iniciaMatriz(iteracoes, 2);
         int comeco = 0, fim = 0;
         int chanceFila = 0, chancePilha = 0, chancePriority = 0, impossible = 0;
+        int i;
 
-        for (int i = 0; i < iteracoes; i++){
-            scanf("%d %d",&operacoes[i*iteracoes + 0], &operacoes[i*iteracoes + 1]);
+        for (i = 0; i < iteracoes; i++){
+            scanf("%d %d",&operacoes[i][0], &operacoes[i][1]);
         }
 
-        for(int i = 0; i < iteracoes; i++){
-            int* indice = busca(operacoes, iteracoes, operacoes[i*iteracoes + 1]);
-
-            if(indice[0] == -1){
-                printf("impossible\n");
-                impossible++;
-                break;
-            }
-
-            if(operacoes[i*iteracoes] == 1){
+        for(i = 0; i < iteracoes; i++){
+            if(operacoes[i][0] == 1){
                 fim++;
             }
-            else if(operacoes[i*iteracoes] == 2){
+            else if(operacoes[i][0] == 2){
+                int* indice = busca(operacoes, i, operacoes[i][1]);
+                printf("Indice: %d %d\n", indice[0], indice[1]);
+
+                if(indice[0] == -1){
+                    printf("impossible -1\n");
+                    impossible++;
+                    break;
+                }
+
                 if(indice[1] == 2){
-                    printf("impossible\n");
+                    printf("impossible 2\n");
                     impossible++;
                     break;
                 }
@@ -50,38 +53,29 @@ int main(){
                     comeco++;
                     chanceFila++;
                 }
-                if(indice[0] == maiorNo(operacoes, iteracoes)){
+                if(indice[0] == maiorNo(operacoes, i)){
                     chancePriority++;
                 }
+                free(indice);
             }
 
-            free(indice);
         }
 
-        if(!impossible){
-            if(chancePilha > chanceFila){
-                if(chancePriority == chancePilha){
-                    printf("stack\n");
-                }else if(chancePriority > chancePilha){
-                    printf("priority queue\n");
-                }else{
-                    printf("not sure\n");
-                }
-            }else if (chanceFila > chancePilha){
-                if(chancePriority == chancePilha){
-                    printf("queue\n");
-                }else if(chancePriority > chanceFila){
-                    printf("priority queue\n");
-                }else{
-                    printf("not sure\n");
-                }
-            }else{
-                if(chancePriority == chanceFila){
-                    printf("not sure\n");
-                }else{
-                    printf("priority queue\n");
-                }
-            }
+        if(impossible){
+            printf("(%d)\n", impossible);
+            scanf("%d",&iteracoes);
+            continue;
+        }
+
+        if(chancePriority == chanceFila && chancePriority == chancePilha){
+            printf("not sure\n");
+        }else if(chancePriority > chanceFila && chancePriority > chancePilha){
+            printf("priority queue\n");
+
+        }else if(chanceFila > chancePriority && chanceFila > chancePilha){
+            printf("queue\n");
+        }else if(chancePilha > chancePriority && chancePilha > chancePriority){
+            printf("stack\n");
         }
 
         scanf("%d",&iteracoes);
@@ -89,20 +83,20 @@ int main(){
     return 0;
 }
 
-int* busca(int* vet, int tam, int valor){
-    int i, j, achou = 0;
+int* busca(int** mat, int tam, int valor){
+    int i, j, achou = -1;
 
     int* indice = (int*) malloc(2*sizeof(int));
     indice[0] = -1;
     indice[1] = -1;
 
-    for(i = 0; i < tam-1; i++){
-        if(vet[i*tam + 1] == valor){
+    for(i = 0; i < tam; i++){
+        if(mat[i][1] == valor){
             achou = i;
         }
     }
 
-    if(achou){
+    if(achou != -1){
         indice[0] = achou;
         indice[1] = 1;
     }
@@ -110,13 +104,13 @@ int* busca(int* vet, int tam, int valor){
     return indice;
 }
 
-int maiorNo(int* vet, int tam){
+int maiorNo(int** mat, int tam){
     int maior = 0, i;
-    for(i = 0; i < tam-1; i++){
-        if(vet[i*tam] == 1){
-            printf("[%d]\n", vet[i*tam + 1]);
-            if(vet[i*tam + 1] >= maior){
-                maior = vet[i*tam + 1];
+    for(i = 0; i < tam; i++){
+        if(mat[i][0] == 1){
+            printf("-[%d]\n", mat[i][1]);
+            if(mat[i][1] >= maior){
+                maior = mat[i][1];
             }
         }
     }
@@ -124,20 +118,30 @@ int maiorNo(int* vet, int tam){
     return maior;
 }
 
-void apagar(int* vet, int tam, int indice){
-    vet[indice*tam + 0] = -1;
-    vet[indice*tam + 1] = -1;
+void apagar(int** vet, int tam, int indice){
+    vet[indice][0] = -1;
+    vet[indice][1] = -1;
     realocaRec(vet, tam-1, indice);
 }
 
-void realocaRec(int* vet, int tam, int indice){
+int** iniciaMatriz(int x, int y){
+    int** matriz = (int**) malloc(x * sizeof(int*));
+    int i;
+    for(i = 0; i < x; i++){
+        matriz[i] = (int*) malloc(y * sizeof(int));
+    }
+
+    return matriz;
+}
+
+void realocaRec(int** mat, int tam, int indice){
     if(indice >= tam) return;
 
-    int auxA = vet[indice*tam+0], auxB = vet[indice*tam+1];
-    vet[indice*tam+0] = vet[(indice+1)*tam+0];
-    vet[indice*tam+1] = vet[(indice+1)*tam+1];
-    vet[(indice+1)*tam+0] = auxA;
-    vet[(indice+1)*tam+1] = auxB;
+    int auxA = mat[indice][0], auxB = mat[indice][1];
+    mat[indice][0] = mat[(indice+1)][0];
+    mat[indice][1] = mat[(indice+1)][1];
+    mat[(indice+1)][0] = auxA;
+    mat[(indice+1)][1] = auxB;
 
-    realocaRec(vet, tam, indice+1);
+    realocaRec(mat, tam, indice+1);
 }
