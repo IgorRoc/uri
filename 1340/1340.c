@@ -8,7 +8,7 @@ void apagar(int**, int, int);
 void realocaRec(int**, int, int);
 
 int main(){
-    int iteracoes;
+    int iteracoes = 0;
 
     scanf("%d",&iteracoes);
 
@@ -118,12 +118,6 @@ int maiorNo(int** mat, int tam){
     return maior;
 }
 
-void apagar(int** vet, int tam, int indice){
-    vet[indice][0] = -1;
-    vet[indice][1] = -1;
-    realocaRec(vet, tam-1, indice);
-}
-
 int** iniciaMatriz(int x, int y){
     int** matriz = (int**) malloc(x * sizeof(int*));
     int i;
@@ -132,6 +126,12 @@ int** iniciaMatriz(int x, int y){
     }
 
     return matriz;
+}
+
+void apagar(int** mat, int tam, int indice){
+    mat[indice][0] = -1;
+    mat[indice][1] = -1;
+    realocaRec(mat, tam-1, indice);
 }
 
 void realocaRec(int** mat, int tam, int indice){
