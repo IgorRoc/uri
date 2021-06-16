@@ -22,7 +22,7 @@ int main(){
 
     // scanf("%d %d", &n, &m);
     n=10;
-    m=30;
+    m=15;
 
     NODE* p, *tree;
     tree = maketree(n);
@@ -32,6 +32,7 @@ int main(){
 
     printf("%d\n", nivel);
 
+    // system("PAUSE");
     return 0;
 }
 
@@ -60,8 +61,7 @@ int insereArvoreRec(NODE* n, int nivelAtual, int objetivo){
     printf("[%d] [%d] [%d]\n",n->info, nivelAtual, objetivo);
 
     if(n->info == objetivo){
-        printf("-----");
-        printf("(%d) (%d) (%d)\n", n->info, nivelAtual, objetivo);
+        printf("---- (%d) (%d) (%d)\n", n->info, nivelAtual, objetivo);
         return nivelAtual;
     }
 
@@ -74,6 +74,11 @@ int insereArvoreRec(NODE* n, int nivelAtual, int objetivo){
     n->op4 = createnode(n->info / 3, nivelAtual);
     n->op5 = createnode(n->info + 7, nivelAtual);
     n->op6 = createnode(n->info - 7, nivelAtual);
+
+    if( n->op1->info == objetivo || n->op2->info == objetivo || n->op3->info == objetivo || n->op4->info == objetivo || n->op5->info == objetivo || n->op6->info == objetivo){
+        printf("---- (%d) (%d) (%d)\n", n->info, nivelAtual, objetivo);
+        return nivelAtual;
+    }
 
     if(objetivo > n->op1->info)
         insereArvoreRec(n->op1, nivelAtual, objetivo);
