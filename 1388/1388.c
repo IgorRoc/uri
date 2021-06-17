@@ -5,12 +5,13 @@ void bubblesort(int*, int, int*, int);
 
 int main(){
     int n, m, x;
+    int *vet, *iteracoes;
 
     scanf("%d %d", &n, &m);
 
     while (n != 0 || m != 0){
-        int* vet = (int*) malloc(sizeof(int) * n);
-        int* iteracoes = (int*) malloc(sizeof(int) * m);
+        vet = (int*) malloc(sizeof(int) * n);
+        iteracoes = (int*) malloc(sizeof(int) * m);
 
         int i;
         for (i = 0; i < n; i++){
@@ -23,35 +24,41 @@ int main(){
 
         bubblesort(vet, n, iteracoes, m);
         
-        for(i = 0; i < n-1; i++){
+        int printMax = n-1;
+        for(i = 0; i < printMax; i++){
             printf("%d ", vet[i]);
         }
-        printf("%d\n\n", vet[i]);
+        printf("%d\n", vet[i]);
 
         scanf("%d %d", &n, &m);
+        
+        free(vet);
+        free(iteracoes);
     }
     
     return 0;
 }
 
 void bubblesort(int* vet, int tam, int* iteracoes, int tam_ite){
-    int i, j, k, trocas = 0;
-    for(i = tam_ite; i > 0; i--){
-        for(j = 0; j < iteracoes[i-1]; j++){
-            // if(iteracoes[tam_ite-i] >= tam) continue;
-            // if(trocas >= iteracoes[i-1]) break;
-            // if(j+1 >= tam) continue;
-            int aux = vet[i+j-1];
-            vet[i+j-1] = vet[i+j-1];
-            vet[i+j-1] = aux;
-            trocas++;
-            printf("[%d]", j);
-        }
+    int i, j, trocas, indiceParaTrocar, calculoIndice;
+    for( i = 0; i < tam_ite; i++){
         trocas = 0;
-        printf("[rodada %d]", i);
-        for(int k = 0; k < tam; k++){
-            printf("%d ", vet[k]);
+        indiceParaTrocar = 1;
+        if(iteracoes[i] == 0 || iteracoes[i] >= tam) continue;
+
+        for( j = 1; j < tam; j++){
+            calculoIndice = j-indiceParaTrocar;
+            if(vet[j] > vet[calculoIndice]){
+                int aux = vet [calculoIndice];
+                vet [calculoIndice] = vet [j];
+                vet[j] = aux;
+                trocas++;
+            }else{
+                indiceParaTrocar++;
+            }
+            if( trocas >= iteracoes[i] ){
+                break;
+            }
         }
-        printf("\n");
     }
 }
