@@ -34,19 +34,17 @@ int main(){
         STACK* vagao = makeStack();
         STACK* objetivo = makeStack();
 
-        for(i = 0; i < 2*qtd_letras; i++){
+        for(i = 0; i < qtd_letras; ){
             scanf("%c", &c);
-            if(c == '\n' || c == '\0') break;
-            if(c != ' '){
-                push(vagao, c);
-            }
+            if(c == '\n' || c == ' ' || c == '\0') continue;
+            push(vagao, c);
+            i++;
         }
-        for(i = 0; i < 2*qtd_letras; i++){
+        for(i = 0; i < qtd_letras; ){
             scanf("%c", &c);
-            if(c == '\n' || c == '\0') break;
-            if(c != ' '){
-                push(objetivo, c);
-            }
+            if(c == '\n' || c == ' ' || c == '\0') continue;
+            push(objetivo, c);
+            i++;
         }
 
         verificaEstacao(invert(vagao), invert(objetivo));
@@ -174,6 +172,6 @@ void verificaEstacao(STACK* vagao, STACK* objetivo){
         pop(objetivo);
         printf("R");
     }
-    
+
     printf("\n");
 }
