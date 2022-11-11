@@ -6,7 +6,7 @@ Arquivos com o final de arquivo `.WA` são arquivos que não foram aceitos pelo 
 
 Arquivos com o final de arquivo `.TLE` são arquivos que não foram aceitos pelo URI por conta de Time Limit Exceeded.
 
-Arquivos com o final de arquivo `.RTE` são arquivos que não foram aceitos pelo URI por conta de Runtime Error.
+Arquivos com o final de arquivo `.RE` são arquivos que não foram aceitos pelo URI por conta de Runtime Error.
 
 Arquivos com o final de arquivo `.CE` são arquivos que não foram aceitos pelo URI por conta de Compilation Error.
 
