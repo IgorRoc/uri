@@ -1,2 +1,8 @@
 *.exe
 *.out
+
+# Ignore files without extension
+*
+!*/
+!*.*
+*.WA
